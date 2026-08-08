@@ -304,21 +304,24 @@ function renderAmbulanceMarkers() {
   state.ambulances.forEach(amb => {
     const coords = adjustedCoords[amb.id] || { lat: -10.177, lng: 123.58 };
 
+    const popupHtml = `
+      <div style="font-family: Inter, sans-serif; font-size: 13px;">
+        <strong>Ambulans ${amb.plate_number}</strong><br>
+        Sopir: ${amb.driver_name || '-'}<br>
+        Status: <strong>${getStatusLabel(amb.status)}</strong>
+      </div>
+    `;
+
     if (markersMap[amb.id]) {
       markersMap[amb.id].setLatLng([coords.lat, coords.lng]);
       markersMap[amb.id].setIcon(createAmbulanceIcon(amb.status));
+      markersMap[amb.id].setPopupContent(popupHtml);
     } else {
       const marker = L.marker([coords.lat, coords.lng], {
         icon: createAmbulanceIcon(amb.status)
       }).addTo(map);
 
-      marker.bindPopup(`
-        <div style="font-family: Inter, sans-serif; font-size: 13px;">
-          <strong>Ambulans ${amb.plate_number}</strong><br>
-          Sopir: ${amb.driver_name || '-'}<br>
-          Status: <strong>${getStatusLabel(amb.status)}</strong>
-        </div>
-      `);
+      marker.bindPopup(popupHtml);
 
       // Highlight sidebar card when marker is clicked directly on map
       marker.on('click', () => {
@@ -374,16 +377,14 @@ function initSse() {
     const data = JSON.parse(e.data);
     const { ambulance_id, status } = data;
 
-    // Update marker icon
-    if (markersMap[ambulance_id]) {
-      markersMap[ambulance_id].setIcon(createAmbulanceIcon(status));
-    }
-
-    // Update state & UI badge
+    // Update state & UI (both sidebar and map popup text)
     const amb = state.ambulances.find(a => a.id === ambulance_id);
     if (amb) {
       amb.status = status;
       renderAmbulanceList();
+      renderAmbulanceMarkers();
+    } else if (markersMap[ambulance_id]) {
+      markersMap[ambulance_id].setIcon(createAmbulanceIcon(status));
     }
   });
 
