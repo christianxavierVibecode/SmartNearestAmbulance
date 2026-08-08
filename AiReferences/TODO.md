@@ -31,14 +31,14 @@
 
 ## Phase 2 — Autentikasi
 
-- [ ] Buat `src/models/userModel.js` — fungsi `findByUsername(username)`
-- [ ] Buat `src/utils/hash.js` — fungsi `hashPassword` dan `comparePassword` menggunakan bcrypt
-- [ ] Buat `src/utils/jwt.js` — fungsi `generateToken(payload)` dan `verifyToken(token)`
-- [ ] Buat `src/controllers/authController.js` — fungsi `login` (validasi username/password, return JWT)
-- [ ] Buat `src/routes/authRoutes.js` — daftarkan `POST /api/auth/login`
-- [ ] Buat `src/middlewares/authMiddleware.js` — verifikasi JWT dari header `Authorization`
-- [ ] Buat `src/middlewares/roleMiddleware.js` — fungsi `allowRoles(...roles)` untuk membatasi akses per role
-- [ ] Test manual: login dengan akun operator seed, pastikan token JWT diterima
+- [x] Buat `src/models/userModel.js` — fungsi `findByUsername(username)`
+- [x] Buat `src/utils/hash.js` — fungsi `hashPassword` dan `comparePassword` menggunakan bcrypt
+- [x] Buat `src/utils/jwt.js` — fungsi `generateToken(payload)` dan `verifyToken(token)`
+- [x] Buat `src/controllers/authController.js` — fungsi `login` (validasi username/password, return JWT)
+- [x] Buat `src/routes/authRoutes.js` — daftarkan `POST /api/auth/login`
+- [x] Buat `src/middlewares/authMiddleware.js` — verifikasi JWT dari header `Authorization`
+- [x] Buat `src/middlewares/roleMiddleware.js` — fungsi `allowRoles(...roles)` untuk membatasi akses per role
+- [x] Test manual: login dengan akun operator seed, pastikan token JWT diterima
 
 ## Phase 3 — Ambulance & Status Management
 
