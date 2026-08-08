@@ -135,18 +135,18 @@
 
 ## Phase 9 — Aplikasi Sopir (Capacitor JS)
 
-- [ ] Inisialisasi project Capacitor (`npm init @capacitor/app`) di folder `driver-app/`
-- [ ] Buat halaman login sopir (form sederhana, simpan token setelah login)
-- [ ] Buat halaman utama sopir: tombol ubah status (Available/On Mission/Maintenance/Offline) + tombol SOS
-- [ ] Install plugin background geolocation Capacitor (mis. `@capacitor-community/background-geolocation`)
-- [ ] Tambahkan Android platform (`npx cap add android`)
-- [ ] Konfigurasi izin `ACCESS_BACKGROUND_LOCATION` di `AndroidManifest.xml`
-- [ ] Implementasikan request izin lokasi saat aplikasi pertama kali dibuka
-- [ ] Implementasikan pengiriman lokasi otomatis setiap 5 detik via AJAX `POST /api/location`
-- [ ] Hubungkan tombol status ke `PUT /api/ambulance/:id/status`
-- [ ] Hubungkan tombol SOS ke `POST /api/sos` dengan lokasi terkini
-- [ ] Build APK (`npx cap sync android` → build via Android Studio), test di emulator/device fisik
-- [ ] Test skenario: minimize aplikasi, verifikasi lokasi tetap terkirim di background
+- [x] Inisialisasi project Capacitor (`npm init @capacitor/app`) di folder `driver-app/`
+- [x] Buat halaman login sopir (form sederhana, simpan token setelah login)
+- [x] Buat halaman utama sopir: tombol ubah status (Available/On Mission/Maintenance/Offline) + tombol SOS
+- [x] Install plugin background geolocation Capacitor (mis. `@capacitor-community/background-geolocation`)
+- [x] Tambahkan Android platform (`npx cap add android`)
+- [x] Konfigurasi izin `ACCESS_BACKGROUND_LOCATION` di `AndroidManifest.xml`
+- [x] Implementasikan request izin lokasi saat aplikasi pertama kali dibuka
+- [x] Implementasikan pengiriman lokasi otomatis setiap 5 detik via AJAX `POST /api/location`
+- [x] Hubungkan tombol status ke `PUT /api/ambulance/:id/status`
+- [x] Hubungkan tombol SOS ke `POST /api/sos` dengan lokasi terkini
+- [x] Build APK (`npx cap sync android` → build via Android Studio), test di emulator/device fisik
+- [x] Test skenario: minimize aplikasi, verifikasi lokasi tetap terkirim di background
 
 ## Phase 10 — Non-Functional & Polish
 

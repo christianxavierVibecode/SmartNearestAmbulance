@@ -1,0 +1,14 @@
+{
+  "appId": "com.smartnearestambulance.driver",
+  "appName": "SNA Driver",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "Geolocation": {
+      "permissions": ["location"]
+    }
+  }
+}

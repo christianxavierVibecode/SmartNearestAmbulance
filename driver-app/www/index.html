@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SNA Driver — Mobile App</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen" class="screen">
+    <div class="card login-card">
+      <div class="brand-badge">Aplikasi Sopir Ambulans</div>
+      <h1 class="app-title">SNA Driver</h1>
+      <p class="app-subtitle">Masuk dengan akun sopir terdaftar untuk melacak lokasi & mengelola status operasional</p>
+
+      <form id="login-form">
+        <div id="login-error" class="alert-error hidden"></div>
+
+        <div class="form-group">
+          <label for="username">Username Sopir</label>
+          <input type="text" id="username" placeholder="misal: driver1" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Masukkan password" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full">
+          <span>Masuk Aplikasi</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN DRIVER CONTROL SCREEN -->
+  <div id="main-screen" class="screen hidden">
+    <!-- APP HEADER -->
+    <header class="app-header">
+      <div class="driver-info">
+        <span id="driver-name" class="driver-name">Sopir Ambulans</span>
+        <span id="ambulance-plate" class="ambulance-plate">Plat: -</span>
+      </div>
+      <button id="logout-btn" class="btn-logout">Logout</button>
+    </header>
+
+    <div class="content-body">
+      <!-- GPS TRACKING STATUS CARD -->
+      <div class="card tracking-card">
+        <div class="card-header">
+          <span class="card-title">Pelacakan GPS (5 Detik)</span>
+          <div id="gps-status-indicator" class="gps-indicator active">
+            <span class="dot"></span>
+            <span id="gps-status-text">GPS Aktif</span>
+          </div>
+        </div>
+        <div class="tracking-details">
+          <div class="detail-row">
+            <span>Koordinat Terkini:</span>
+            <strong id="live-coords" class="coords-value">Memuat GPS...</strong>
+          </div>
+          <div class="detail-row">
+            <span>Terakhir Terkirim:</span>
+            <span id="last-sent-time" class="time-value">Belum pernah</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATUS SWITCHER GRID -->
+      <div class="card status-section">
+        <h2 class="section-title">Ubah Status Ambulans</h2>
+        <div class="status-grid">
+          <button class="status-btn btn-available" data-status="available">
+            <span class="icon">🟢</span>
+            <span class="label">Available</span>
+          </button>
+          <button class="status-btn btn-on-mission" data-status="on_mission">
+            <span class="icon">🔵</span>
+            <span class="label">On Mission</span>
+          </button>
+          <button class="status-btn btn-maintenance" data-status="maintenance">
+            <span class="icon">🟡</span>
+            <span class="label">Maintenance</span>
+          </button>
+          <button class="status-btn btn-offline" data-status="offline">
+            <span class="icon">⚪</span>
+            <span class="label">Offline</span>
+          </button>
+        </div>
+        <div id="current-status-display" class="current-status-box">
+          Status saat ini: <strong id="status-text-val">Offline</strong>
+        </div>
+      </div>
+
+      <!-- SOS EMERGENCY BUTTON -->
+      <div class="sos-container">
+        <button id="sos-btn" class="btn-sos">
+          <span class="sos-icon">🚨</span>
+          <span class="sos-label">SINYAL DARURAT (SOS)</span>
+          <span class="sos-sublabel">Tekan untuk kirim lokasi darurat instant</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

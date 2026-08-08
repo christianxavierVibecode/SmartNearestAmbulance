@@ -19,6 +19,9 @@ app.use(express.json());
 // Serve Operator Web Dashboard Static Files
 app.use(express.static(path.join(__dirname, '../dashboard')));
 
+// Serve Driver Mobile Web App Static Files
+app.use('/driver', express.static(path.join(__dirname, '../driver-app/www')));
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api', ambulanceRoutes);
