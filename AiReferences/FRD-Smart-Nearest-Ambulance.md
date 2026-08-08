@@ -17,7 +17,7 @@ Menjabarkan kebutuhan fungsional secara teknis: arsitektur sistem, alur data, sp
 
 ## 2. Arsitektur Sistem
 
-**Stack utama:** Node.js (backend), REST API + SSE, **MySQL** (database relasional), **Capacitor JS** (pembungkus native untuk aplikasi sopir), Web dashboard (operator, berjalan di browser biasa).
+**Stack utama:** Node.js (backend), REST API + SSE, **MySQL** (database relasional), **Capacitor JS** (pembungkus native untuk aplikasi sopir), Web dashboard (operator, berjalan di browser biasa) dengan **Leaflet.js + OpenStreetMap (tile default, gratis tanpa API key)** untuk peta monitoring.
 
 ### Mengapa Capacitor JS untuk Aplikasi Sopir
 

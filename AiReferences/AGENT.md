@@ -30,12 +30,12 @@ Project ini memiliki file `DESIGN.md` (diunduh dari styles.refero.design) yang b
 Smart Nearest Ambulance adalah sistem monitoring armada ambulans berbasis GPS yang membantu operator memantau posisi ambulans secara real-time dan mendapatkan rekomendasi ambulans terdekat untuk dispatch pasien darurat.
 
 Dokumen referensi lengkap (baca jika butuh konteks bisnis/fungsional lebih dalam):
-- `BRD.md` — latar belakang bisnis & ruang lingkup
-- `PRD-Smart-Nearest-Ambulance.md` — kebutuhan produk, user stories, prioritas fitur
-- `FRD-Smart-Nearest-Ambulance.md` — kebutuhan fungsional teknis, API spec, algoritma
-- `database/schema.sql` (ERD) — struktur tabel database
-- `DESIGN.md` — referensi tampilan/UI (lihat aturan wajib khusus di bagian 0.1)
-- `TODO.md` — daftar task atomik yang harus diikuti
+- `AiReferences/BRD.md` — latar belakang bisnis & ruang lingkup
+- `AiReferences/PRD-Smart-Nearest-Ambulance.md` — kebutuhan produk, user stories, prioritas fitur
+- `AiReferences/FRD-Smart-Nearest-Ambulance.md` — kebutuhan fungsional teknis, API spec, algoritma
+- `AiReferences/schema.sql` (ERD) — struktur tabel database
+- `AiReferences/DESIGN.md` — referensi tampilan/UI (lihat aturan wajib khusus di bagian 0.1)
+- `AiReferences/TODO.md` — daftar task atomik yang harus diikuti
 
 ---
 

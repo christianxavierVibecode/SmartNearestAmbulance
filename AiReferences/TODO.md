@@ -8,26 +8,26 @@
 
 ## Phase 0 — Project Setup
 
-- [ ] Inisialisasi project Node.js (`npm init -y`)
-- [ ] Install dependency backend: `express mysql2 dotenv jsonwebtoken bcrypt cors`
-- [ ] Install dependency dev: `nodemon`
-- [ ] Buat struktur folder: `src/routes`, `src/controllers`, `src/models`, `src/config`, `src/middlewares`, `src/utils`
-- [ ] Buat file `.env.example` berisi variabel: `PORT`, `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `JWT_SECRET`
-- [ ] Buat `src/config/db.js` — koneksi pool MySQL menggunakan `mysql2/promise`
-- [ ] Buat `src/server.js` — Express app dasar dengan endpoint `GET /health` yang mengembalikan `{status: "ok"}`
-- [ ] Jalankan server dan pastikan `GET /health` berhasil diakses
+- [x] Inisialisasi project Node.js (`npm init -y`)
+- [x] Install dependency backend: `express mysql2 dotenv jsonwebtoken bcrypt cors`
+- [x] Install dependency dev: `nodemon`
+- [x] Buat struktur folder: `src/routes`, `src/controllers`, `src/models`, `src/config`, `src/middlewares`, `src/utils`
+- [x] Buat file `.env.example` berisi variabel: `PORT`, `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `JWT_SECRET`
+- [x] Buat `src/config/db.js` — koneksi pool MySQL menggunakan `mysql2/promise`
+- [x] Buat `src/server.js` — Express app dasar dengan endpoint `GET /health` yang mengembalikan `{status: "ok"}`
+- [x] Jalankan server dan pastikan `GET /health` berhasil diakses
 
 ## Phase 1 — Database Schema
 
-- [ ] Buat file `database/schema.sql` berisi `CREATE TABLE users` (sesuai ERD)
-- [ ] Tambahkan `CREATE TABLE ambulances` ke `schema.sql` beserta foreign key ke `users`
-- [ ] Tambahkan `CREATE TABLE location_history` ke `schema.sql` beserta index `(ambulance_id, recorded_at)`
-- [ ] Tambahkan `CREATE TABLE sos_alerts` ke `schema.sql`
-- [ ] Tambahkan `CREATE TABLE trips` ke `schema.sql`
-- [ ] Jalankan `schema.sql` ke database MySQL lokal, verifikasi seluruh tabel terbentuk
-- [ ] Buat `database/seed.sql` — insert 1 user role `operator`, 1 user role `management`, 3 user role `driver`
-- [ ] Tambahkan ke `seed.sql` — insert 3 baris `ambulances` dengan `driver_id` mengacu ke 3 driver di atas
-- [ ] Jalankan `seed.sql`, verifikasi data masuk dengan query `SELECT`
+- [x] Buat file `database/schema.sql` berisi `CREATE TABLE users` (sesuai ERD)
+- [x] Tambahkan `CREATE TABLE ambulances` ke `schema.sql` beserta foreign key ke `users`
+- [x] Tambahkan `CREATE TABLE location_history` ke `schema.sql` beserta index `(ambulance_id, recorded_at)`
+- [x] Tambahkan `CREATE TABLE sos_alerts` ke `schema.sql`
+- [x] Tambahkan `CREATE TABLE trips` ke `schema.sql`
+- [x] Jalankan `schema.sql` ke database MySQL lokal, verifikasi seluruh tabel terbentuk
+- [x] Buat `database/seed.sql` — insert 1 user role `operator`, 1 user role `management`, 3 user role `driver`
+- [x] Tambahkan ke `seed.sql` — insert 3 baris `ambulances` dengan `driver_id` mengacu ke 3 driver di atas
+- [x] Jalankan `seed.sql`, verifikasi data masuk dengan query `SELECT`
 
 ## Phase 2 — Autentikasi
 
@@ -95,17 +95,43 @@
 - [ ] Buat folder `dashboard/` dengan `index.html`, `style.css`, `app.js`
 - [ ] Buat halaman login sederhana (form username/password → simpan token di `localStorage`)
 - [ ] Buat layout utama: sidebar daftar ambulans + area peta
-- [ ] Integrasikan Leaflet.js, tampilkan peta dasar
-- [ ] Fetch `GET /api/ambulances` saat halaman dimuat, render marker awal di peta
+
+### Setup Peta (Leaflet + OpenStreetMap)
+
+- [ ] Tambahkan Leaflet via CDN di `index.html` — `<link>` ke `leaflet.css` dan `<script>` ke `leaflet.js` dari `unpkg.com/leaflet`
+- [ ] Buat elemen `<div id="map">` dengan tinggi eksplisit di CSS (Leaflet butuh container dengan dimensi jelas)
+- [ ] Inisialisasi peta dengan `L.map('map').setView([lat, lng], zoom)`, pusatkan ke wilayah operasional (mis. area NTT)
+- [ ] Tambahkan tile layer OpenStreetMap default: `L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors' }).addTo(map)`
+- [ ] Verifikasi atribusi "© OpenStreetMap contributors" tampil di pojok kanan bawah peta (wajib, jangan dihapus)
+
+### Marker Ambulans
+
+- [ ] Buat custom icon Leaflet (`L.icon` atau `L.divIcon`) per status ambulans: `available` = hijau, `on_mission` = biru, `maintenance` = kuning, `offline` = abu-abu
+- [ ] Fetch `GET /api/ambulances` saat halaman dimuat, render marker awal ke peta menggunakan `L.marker(...).addTo(map)` dengan icon sesuai status
+- [ ] Simpan referensi tiap marker dalam object/map JS (key: `ambulance_id`) agar mudah diupdate nanti tanpa render ulang seluruh peta
+- [ ] Tambahkan popup per marker (`marker.bindPopup(...)`) berisi plat nomor, nama sopir, status, dan last seen
+
+### Update Realtime via SSE
+
 - [ ] Buat koneksi `EventSource` ke `/api/stream`
-- [ ] Handle event `location_update` — update posisi marker terkait secara realtime
-- [ ] Tampilkan badge status (warna berbeda per status) di sidebar list ambulans
-- [ ] Tampilkan indikator "Last Seen" per ambulans (format relative time, mis. "5 detik lalu")
-- [ ] Terapkan styling "stale" (abu-abu) jika `last_seen_at` melewati threshold
-- [ ] Buat form input lokasi pasien (klik di peta atau input manual lat/lng)
-- [ ] Panggil `GET /api/ambulance/nearest` dan tampilkan hasil rekomendasi di panel
-- [ ] Handle event `sos_alert` dari SSE — tampilkan popup/notifikasi mencolok
+- [ ] Handle event `location_update` — cari marker terkait dari object referensi, panggil `marker.setLatLng([lat, lng])` (bukan render ulang marker baru)
+- [ ] Handle event `status_update` — ganti icon marker terkait sesuai status baru (`marker.setIcon(...)`)
+- [ ] Tampilkan badge status (warna berbeda per status) di sidebar list ambulans, sinkron dengan perubahan realtime
+- [ ] Tampilkan indikator "Last Seen" per ambulans (format relative time, mis. "5 detik lalu"), update tiap beberapa detik
+- [ ] Terapkan styling "stale" pada marker (opacity dikurangi / icon abu-abu) jika `last_seen_at` melewati threshold
+
+### Rekomendasi Ambulans Terdekat
+
+- [ ] Buat form input lokasi pasien: klik di peta (`map.on('click', ...)`) atau input manual lat/lng
+- [ ] Tambahkan marker sementara dengan icon berbeda (mis. ikon pasien/RS) di lokasi yang dipilih
+- [ ] Panggil `GET /api/ambulance/nearest` dengan koordinat terpilih, tampilkan hasil (top 3) di panel sidebar
+- [ ] Gambar garis (`L.polyline`) dari marker lokasi pasien ke tiap ambulans hasil rekomendasi sebagai visualisasi jarak
+
+### SOS & Riwayat
+
+- [ ] Handle event `sos_alert` dari SSE — tampilkan popup/notifikasi mencolok dan sorot marker ambulans terkait (mis. ganti sementara ke icon merah/animasi)
 - [ ] Buat halaman/panel riwayat perjalanan per ambulans (fetch `GET /api/ambulance/:id/history`)
+- [ ] Test manual end-to-end: buka dashboard, verifikasi peta OSM tampil, marker muncul sesuai status, dan posisi marker berubah realtime saat ada update lokasi
 
 ## Phase 9 — Aplikasi Sopir (Capacitor JS)
 
