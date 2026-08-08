@@ -42,26 +42,26 @@
 
 ## Phase 3 — Ambulance & Status Management
 
-- [ ] Buat `src/models/ambulanceModel.js` — fungsi `getAll()` (join dengan driver name)
-- [ ] Tambahkan fungsi `updateStatus(id, status)` ke `ambulanceModel.js`
-- [ ] Buat `src/controllers/ambulanceController.js` — fungsi `listAmbulances`
-- [ ] Tambahkan fungsi `updateAmbulanceStatus` ke `ambulanceController.js` dengan validasi enum status
-- [ ] Buat `src/routes/ambulanceRoutes.js` — daftarkan `GET /api/ambulances` (protected: operator, management)
-- [ ] Tambahkan `PUT /api/ambulance/:id/status` ke `ambulanceRoutes.js` (protected: driver)
-- [ ] Test manual: update status salah satu ambulans, verifikasi tersimpan di DB
+- [x] Buat `src/models/ambulanceModel.js` — fungsi `getAll()` (join dengan driver name)
+- [x] Tambahkan fungsi `updateStatus(id, status)` ke `ambulanceModel.js`
+- [x] Buat `src/controllers/ambulanceController.js` — fungsi `listAmbulances`
+- [x] Tambahkan fungsi `updateAmbulanceStatus` ke `ambulanceController.js` dengan validasi enum status
+- [x] Buat `src/routes/ambulanceRoutes.js` — daftarkan `GET /api/ambulances` (protected: operator, management)
+- [x] Tambahkan `PUT /api/ambulance/:id/status` ke `ambulanceRoutes.js` (protected: driver)
+- [x] Test manual: update status salah satu ambulans, verifikasi tersimpan di DB
 
 ## Phase 4 — Lokasi & Realtime (SSE)
 
-- [ ] Buat `src/models/locationModel.js` — fungsi `insertLocation(ambulanceId, lat, lng)`
-- [ ] Tambahkan fungsi `updateLastSeen(ambulanceId)` ke `ambulanceModel.js`
-- [ ] Buat `src/utils/sseManager.js` — modul untuk menyimpan daftar client SSE aktif (array of `res` object)
-- [ ] Tambahkan fungsi `broadcast(eventName, data)` ke `sseManager.js`
-- [ ] Buat `src/controllers/streamController.js` — handler `GET /api/stream` (set header SSE, daftarkan client baru ke `sseManager`)
-- [ ] Tambahkan mekanisme heartbeat di `streamController.js` (kirim comment `: heartbeat\n\n` setiap 20 detik)
-- [ ] Tambahkan cleanup client saat koneksi SSE ditutup (`req.on('close')`)
-- [ ] Buat `src/controllers/locationController.js` — fungsi `receiveLocation` (insert DB + update last_seen + broadcast SSE event `location_update`)
-- [ ] Buat `src/routes/locationRoutes.js` — daftarkan `POST /api/location` (protected: driver) dan `GET /api/stream`
-- [ ] Test manual: buka SSE stream via browser/Postman, kirim POST lokasi, verifikasi event diterima real-time
+- [x] Buat `src/models/locationModel.js` — fungsi `insertLocation(ambulanceId, lat, lng)`
+- [x] Tambahkan fungsi `updateLastSeen(ambulanceId)` ke `ambulanceModel.js`
+- [x] Buat `src/utils/sseManager.js` — modul untuk menyimpan daftar client SSE aktif (array of `res` object)
+- [x] Tambahkan fungsi `broadcast(eventName, data)` ke `sseManager.js`
+- [x] Buat `src/controllers/streamController.js` — handler `GET /api/stream` (set header SSE, daftarkan client baru ke `sseManager`)
+- [x] Tambahkan mekanisme heartbeat di `streamController.js` (kirim comment `: heartbeat\n\n` setiap 20 detik)
+- [x] Tambahkan cleanup client saat koneksi SSE ditutup (`req.on('close')`)
+- [x] Buat `src/controllers/locationController.js` — fungsi `receiveLocation` (insert DB + update last_seen + broadcast SSE event `location_update`)
+- [x] Buat `src/routes/locationRoutes.js` — daftarkan `POST /api/location` (protected: driver) dan `GET /api/stream`
+- [x] Test manual: buka SSE stream via browser/Postman, kirim POST lokasi, verifikasi event diterima real-time
 
 ## Phase 5 — Rekomendasi Ambulans Terdekat
 
