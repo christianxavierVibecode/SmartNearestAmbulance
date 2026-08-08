@@ -1,3 +1,9 @@
+// Configuration: Base URL API
+// Jika diakses via browser web server (port 3000), gunakan relative path ''
+// Jika diakses via APK native Capacitor, gunakan IP laptop 'http://10.10.3.238:3000'
+const isServedByExpress = window.location.port === '3000';
+const API_BASE_URL = isServedByExpress ? '' : 'http://10.10.3.238:3000';
+
 // Driver App State
 let state = {
   token: localStorage.getItem('driver_token') || null,
@@ -53,7 +59,7 @@ loginForm.addEventListener('submit', async (e) => {
   const password = document.getElementById('password').value;
 
   try {
-    const res = await fetch('/api/auth/login', {
+    const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
@@ -96,7 +102,7 @@ logoutBtn.addEventListener('click', () => {
 // FETCH DRIVER'S AMBULANCE INFO
 async function loadAmbulanceInfo() {
   try {
-    const res = await fetch('/api/ambulances', {
+    const res = await fetch(`${API_BASE_URL}/api/ambulances`, {
       headers: { 'Authorization': `Bearer ${state.token}` }
     });
     const result = await res.json();
@@ -169,7 +175,7 @@ async function sendLocationUpdate() {
     liveCoordsEl.textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 
     try {
-      const res = await fetch('/api/location', {
+      const res = await fetch(`${API_BASE_URL}/api/location`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${state.token}`,
@@ -201,7 +207,7 @@ statusBtns.forEach(btn => {
     const ambId = state.ambulance ? state.ambulance.id : 1;
 
     try {
-      const res = await fetch(`/api/ambulance/${ambId}/status`, {
+      const res = await fetch(`${API_BASE_URL}/api/ambulance/${ambId}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${state.token}`,
@@ -252,7 +258,7 @@ sosBtn.addEventListener('click', async () => {
   const { lat, lng } = state.currentCoords;
 
   try {
-    const res = await fetch('/api/sos', {
+    const res = await fetch(`${API_BASE_URL}/api/sos`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${state.token}`,
