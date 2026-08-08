@@ -1,8 +1,12 @@
 // Configuration: Base URL API
-// Jika dibuka di browser web (http/https), otomatis gunakan relative path ''
-// Jika dibuka dari APK Native Capacitor (file/capacitor), gunakan URL server Railway (tanpa trailing slash)
-const isWebBrowser = window.location.protocol.startsWith('http');
-const API_BASE_URL = isWebBrowser ? '' : 'https://smartnearestambulance-production.up.railway.app';
+// Deteksi lingkungan: Jika di-run di APK native Capacitor (Capacitor.isNativePlatform() ATAU localhost tanpa port express),
+// gunakan URL publik Railway. Jika dibuka via browser web (Express server), gunakan relative path ''.
+const isNativeApp = (typeof window.Capacitor !== 'undefined' && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform()) ||
+                    (window.location.hostname === 'localhost' && window.location.port === '');
+
+const API_BASE_URL = isNativeApp
+  ? 'https://smartnearestambulance-production.up.railway.app'
+  : '';
 
 // Driver App State
 let state = {
