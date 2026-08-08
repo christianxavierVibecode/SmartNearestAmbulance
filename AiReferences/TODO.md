@@ -65,13 +65,13 @@
 
 ## Phase 5 — Rekomendasi Ambulans Terdekat
 
-- [ ] Buat `src/utils/haversine.js` — fungsi `calculateDistance(lat1, lng1, lat2, lng2)` dalam kilometer
-- [ ] Tambahkan fungsi `getAvailableWithLastLocation()` ke `ambulanceModel.js` (join lokasi terakhir per ambulans)
-- [ ] Buat `src/controllers/ambulanceController.js` fungsi `findNearest` (query param `lat`, `lng`)
-- [ ] Implementasikan filter: hanya status `available` dan `last_seen_at` belum melewati threshold stale
-- [ ] Implementasikan sort by distance ascending, return top 3
-- [ ] Tambahkan `GET /api/ambulance/nearest` ke `ambulanceRoutes.js`
-- [ ] Test manual: panggil endpoint dengan koordinat sample, verifikasi urutan hasil benar
+- [x] Buat `src/utils/haversine.js` — fungsi `calculateDistance(lat1, lng1, lat2, lng2)` dalam kilometer
+- [x] Tambahkan fungsi `getAvailableWithLastLocation()` ke `ambulanceModel.js` (join lokasi terakhir per ambulans)
+- [x] Buat `src/controllers/ambulanceController.js` fungsi `findNearest` (query param `lat`, `lng`)
+- [x] Implementasikan filter: hanya status `available` dan `last_seen_at` belum melewati threshold stale
+- [x] Implementasikan sort by distance ascending, return top 3
+- [x] Tambahkan `GET /api/ambulance/nearest` ke `ambulanceRoutes.js`
+- [x] Test manual: panggil endpoint dengan koordinat sample, verifikasi urutan hasil benar
 
 ## Phase 6 — SOS Darurat
 

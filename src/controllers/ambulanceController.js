@@ -1,7 +1,9 @@
 const ambulanceModel = require('../models/ambulanceModel');
 const sseManager = require('../utils/sseManager');
+const { calculateDistance } = require('../utils/haversine');
 
 const ALLOWED_STATUSES = ['available', 'on_mission', 'maintenance', 'offline'];
+const STALE_THRESHOLD_MINUTES = 30; // 30 minutes threshold for staleness
 
 /**
  * Handle GET /api/ambulances
@@ -15,6 +17,72 @@ async function listAmbulances(req, res) {
     });
   } catch (error) {
     console.error('Error in ambulanceController.listAmbulances:', error);
+    return res.status(500).json({
+      message: 'Terjadi kesalahan pada server'
+    });
+  }
+}
+
+/**
+ * Handle GET /api/ambulance/nearest?lat=&lng=
+ */
+async function findNearest(req, res) {
+  try {
+    const { lat, lng } = req.query;
+
+    if (lat === undefined || lng === undefined) {
+      return res.status(400).json({
+        message: 'Query parameter lat dan lng wajib diisi'
+      });
+    }
+
+    const patientLat = parseFloat(lat);
+    const patientLng = parseFloat(lng);
+
+    if (isNaN(patientLat) || isNaN(patientLng)) {
+      return res.status(400).json({
+        message: 'Format lat atau lng tidak valid'
+      });
+    }
+
+    // 1. Fetch available ambulances with last location
+    const availableAmbulances = await ambulanceModel.getAvailableWithLastLocation();
+
+    const now = new Date();
+
+    // 2. Filter non-stale ambulances and calculate Haversine distance
+    const candidateAmbulances = availableAmbulances
+      .filter(amb => {
+        if (!amb.last_seen_at || amb.latitude === null || amb.longitude === null) {
+          return false;
+        }
+        const lastSeenDate = new Date(amb.last_seen_at);
+        const minutesDiff = (now - lastSeenDate) / (1000 * 60);
+        return minutesDiff <= STALE_THRESHOLD_MINUTES;
+      })
+      .map(amb => {
+        const ambLat = parseFloat(amb.latitude);
+        const ambLng = parseFloat(amb.longitude);
+        const distance = calculateDistance(patientLat, patientLng, ambLat, ambLng);
+        return {
+          ...amb,
+          latitude: ambLat,
+          longitude: ambLng,
+          distance_km: distance
+        };
+      })
+      .sort((a, b) => a.distance_km - b.distance_km);
+
+    // 3. Take top 3 nearest
+    const top3 = candidateAmbulances.slice(0, 3);
+
+    return res.status(200).json({
+      status: 'success',
+      count: top3.length,
+      data: top3
+    });
+  } catch (error) {
+    console.error('Error in ambulanceController.findNearest:', error);
     return res.status(500).json({
       message: 'Terjadi kesalahan pada server'
     });
@@ -72,5 +140,6 @@ async function updateAmbulanceStatus(req, res) {
 
 module.exports = {
   listAmbulances,
+  findNearest,
   updateAmbulanceStatus
 };

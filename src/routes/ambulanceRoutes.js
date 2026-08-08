@@ -12,6 +12,14 @@ router.get(
   ambulanceController.listAmbulances
 );
 
+// GET /api/ambulance/nearest (protected: operator, management)
+router.get(
+  '/ambulance/nearest',
+  verifyAuthToken,
+  allowRoles('operator', 'management'),
+  ambulanceController.findNearest
+);
+
 // PUT /api/ambulance/:id/status (protected: driver, operator, management)
 router.put(
   '/ambulance/:id/status',
