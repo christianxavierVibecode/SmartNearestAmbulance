@@ -2,7 +2,7 @@
 // Jika diakses via browser web server (port 3000), gunakan relative path ''
 // Jika diakses via APK native Capacitor, gunakan IP laptop 'http://10.10.3.238:3000'
 const isServedByExpress = window.location.port === '3000';
-const API_BASE_URL = isServedByExpress ? '' : 'http://10.10.3.238:3000';
+const API_BASE_URL = isServedByExpress ? '' : 'https://smartnearestambulance-production.up.railway.app/';
 
 // Driver App State
 let state = {
