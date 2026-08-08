@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+const path = require('path');
+
 const authRoutes = require('./routes/authRoutes');
 const ambulanceRoutes = require('./routes/ambulanceRoutes');
 const locationRoutes = require('./routes/locationRoutes');
@@ -13,6 +15,9 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Serve Operator Web Dashboard Static Files
+app.use(express.static(path.join(__dirname, '../dashboard')));
 
 // Routes
 app.use('/api/auth', authRoutes);

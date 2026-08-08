@@ -92,46 +92,46 @@
 
 ## Phase 8 — Dashboard Web Operator
 
-- [ ] Buat folder `dashboard/` dengan `index.html`, `style.css`, `app.js`
-- [ ] Buat halaman login sederhana (form username/password → simpan token di `localStorage`)
-- [ ] Buat layout utama: sidebar daftar ambulans + area peta
+- [x] Buat folder `dashboard/` dengan `index.html`, `style.css`, `app.js`
+- [x] Buat halaman login sederhana (form username/password → simpan token di `localStorage`)
+- [x] Buat layout utama: sidebar daftar ambulans + area peta
 
 ### Setup Peta (Leaflet + OpenStreetMap)
 
-- [ ] Tambahkan Leaflet via CDN di `index.html` — `<link>` ke `leaflet.css` dan `<script>` ke `leaflet.js` dari `unpkg.com/leaflet`
-- [ ] Buat elemen `<div id="map">` dengan tinggi eksplisit di CSS (Leaflet butuh container dengan dimensi jelas)
-- [ ] Inisialisasi peta dengan `L.map('map').setView([lat, lng], zoom)`, pusatkan ke wilayah operasional (mis. area NTT)
-- [ ] Tambahkan tile layer OpenStreetMap default: `L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors' }).addTo(map)`
-- [ ] Verifikasi atribusi "© OpenStreetMap contributors" tampil di pojok kanan bawah peta (wajib, jangan dihapus)
+- [x] Tambahkan Leaflet via CDN di `index.html` — `<link>` ke `leaflet.css` dan `<script>` ke `leaflet.js` dari `unpkg.com/leaflet`
+- [x] Buat elemen `<div id="map">` dengan tinggi eksplisit di CSS (Leaflet butuh container dengan dimensi jelas)
+- [x] Inisialisasi peta dengan `L.map('map').setView([lat, lng], zoom)`, pusatkan ke wilayah operasional (mis. area NTT)
+- [x] Tambahkan tile layer OpenStreetMap default: `L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors' }).addTo(map)`
+- [x] Verifikasi atribusi "© OpenStreetMap contributors" tampil di pojok kanan bawah peta (wajib, jangan dihapus)
 
 ### Marker Ambulans
 
-- [ ] Buat custom icon Leaflet (`L.icon` atau `L.divIcon`) per status ambulans: `available` = hijau, `on_mission` = biru, `maintenance` = kuning, `offline` = abu-abu
-- [ ] Fetch `GET /api/ambulances` saat halaman dimuat, render marker awal ke peta menggunakan `L.marker(...).addTo(map)` dengan icon sesuai status
-- [ ] Simpan referensi tiap marker dalam object/map JS (key: `ambulance_id`) agar mudah diupdate nanti tanpa render ulang seluruh peta
-- [ ] Tambahkan popup per marker (`marker.bindPopup(...)`) berisi plat nomor, nama sopir, status, dan last seen
+- [x] Buat custom icon Leaflet (`L.icon` atau `L.divIcon`) per status ambulans: `available` = hijau, `on_mission` = biru, `maintenance` = kuning, `offline` = abu-abu
+- [x] Fetch `GET /api/ambulances` saat halaman dimuat, render marker awal ke peta menggunakan `L.marker(...).addTo(map)` dengan icon sesuai status
+- [x] Simpan referensi tiap marker dalam object/map JS (key: `ambulance_id`) agar mudah diupdate nanti tanpa render ulang seluruh peta
+- [x] Tambahkan popup per marker (`marker.bindPopup(...)`) berisi plat nomor, nama sopir, status, dan last seen
 
 ### Update Realtime via SSE
 
-- [ ] Buat koneksi `EventSource` ke `/api/stream`
-- [ ] Handle event `location_update` — cari marker terkait dari object referensi, panggil `marker.setLatLng([lat, lng])` (bukan render ulang marker baru)
-- [ ] Handle event `status_update` — ganti icon marker terkait sesuai status baru (`marker.setIcon(...)`)
-- [ ] Tampilkan badge status (warna berbeda per status) di sidebar list ambulans, sinkron dengan perubahan realtime
-- [ ] Tampilkan indikator "Last Seen" per ambulans (format relative time, mis. "5 detik lalu"), update tiap beberapa detik
-- [ ] Terapkan styling "stale" pada marker (opacity dikurangi / icon abu-abu) jika `last_seen_at` melewati threshold
+- [x] Buat koneksi `EventSource` ke `/api/stream`
+- [x] Handle event `location_update` — cari marker terkait dari object referensi, panggil `marker.setLatLng([lat, lng])` (bukan render ulang marker baru)
+- [x] Handle event `status_update` — ganti icon marker terkait sesuai status baru (`marker.setIcon(...)`)
+- [x] Tampilkan badge status (warna berbeda per status) di sidebar list ambulans, sinkron dengan perubahan realtime
+- [x] Tampilkan indikator "Last Seen" per ambulans (format relative time, mis. "5 detik lalu"), update tiap beberapa detik
+- [x] Terapkan styling "stale" pada marker (opacity dikurangi / icon abu-abu) jika `last_seen_at` melewati threshold
 
 ### Rekomendasi Ambulans Terdekat
 
-- [ ] Buat form input lokasi pasien: klik di peta (`map.on('click', ...)`) atau input manual lat/lng
-- [ ] Tambahkan marker sementara dengan icon berbeda (mis. ikon pasien/RS) di lokasi yang dipilih
-- [ ] Panggil `GET /api/ambulance/nearest` dengan koordinat terpilih, tampilkan hasil (top 3) di panel sidebar
-- [ ] Gambar garis (`L.polyline`) dari marker lokasi pasien ke tiap ambulans hasil rekomendasi sebagai visualisasi jarak
+- [x] Buat form input lokasi pasien: klik di peta (`map.on('click', ...)`) atau input manual lat/lng
+- [x] Tambahkan marker sementara dengan icon berbeda (mis. ikon pasien/RS) di lokasi yang dipilih
+- [x] Panggil `GET /api/ambulance/nearest` dengan koordinat terpilih, tampilkan hasil (top 3) di panel sidebar
+- [x] Gambar garis (`L.polyline`) dari marker lokasi pasien ke tiap ambulans hasil rekomendasi sebagai visualisasi jarak
 
 ### SOS & Riwayat
 
-- [ ] Handle event `sos_alert` dari SSE — tampilkan popup/notifikasi mencolok dan sorot marker ambulans terkait (mis. ganti sementara ke icon merah/animasi)
-- [ ] Buat halaman/panel riwayat perjalanan per ambulans (fetch `GET /api/ambulance/:id/history`)
-- [ ] Test manual end-to-end: buka dashboard, verifikasi peta OSM tampil, marker muncul sesuai status, dan posisi marker berubah realtime saat ada update lokasi
+- [x] Handle event `sos_alert` dari SSE — tampilkan popup/notifikasi mencolok dan sorot marker ambulans terkait (mis. ganti sementara ke icon merah/animasi)
+- [x] Buat halaman/panel riwayat perjalanan per ambulans (fetch `GET /api/ambulance/:id/history`)
+- [x] Test manual end-to-end: buka dashboard, verifikasi peta OSM tampil, marker muncul sesuai status, dan posisi marker berubah realtime saat ada update lokasi
 
 ## Phase 9 — Aplikasi Sopir (Capacitor JS)
 

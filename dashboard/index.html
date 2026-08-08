@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Nearest Ambulance — Operator Dashboard</title>
+
+  <!-- Google Fonts: Inter & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600&display=swap" rel="stylesheet">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <!-- App Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- LOGIN MODAL -->
+  <div id="login-modal" class="modal-overlay">
+    <div class="login-card">
+      <div class="brand-header">
+        <div class="brand-badge">SNA Operator</div>
+        <h1 class="login-title">Smart Nearest Ambulance</h1>
+        <p class="login-subtitle">Masuk untuk memantau armada ambulans dan dispatch darurat</p>
+      </div>
+
+      <form id="login-form">
+        <div id="login-error" class="alert-error hidden"></div>
+        
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="Masukkan username operator" required autocomplete="username">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Masukkan password" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" id="login-btn" class="btn btn-primary btn-full">
+          <span>Masuk Dashboard</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN APP CONTAINER -->
+  <div id="app-container" class="app-container hidden">
+    <!-- TOP HEADER -->
+    <header class="top-nav">
+      <div class="nav-brand">
+        <div class="logo-icon">🚑</div>
+        <span class="logo-text">Smart Nearest Ambulance</span>
+      </div>
+
+      <div class="nav-status">
+        <div id="sse-indicator" class="status-indicator offline">
+          <span class="dot"></span>
+          <span class="status-text">Disconnected</span>
+        </div>
+      </div>
+
+      <div class="nav-user">
+        <div class="user-info">
+          <span id="user-name" class="user-name">Operator</span>
+          <span id="user-role" class="user-role">operator</span>
+        </div>
+        <button id="logout-btn" class="btn btn-outline btn-sm">Logout</button>
+      </div>
+    </header>
+
+    <!-- WORKSPACE BODY -->
+    <main class="workspace">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <!-- TAB BUTTONS -->
+        <div class="tab-buttons">
+          <button id="tab-ambulances-btn" class="tab-btn active" data-tab="ambulances">Armada</button>
+          <button id="tab-nearest-btn" class="tab-btn" data-tab="nearest">Rekomendasi</button>
+          <button id="tab-sos-btn" class="tab-btn" data-tab="sos">Alert SOS <span id="sos-badge-count" class="badge-count hidden">0</span></button>
+        </div>
+
+        <!-- TAB CONTENT: AMBULANCES LIST -->
+        <div id="tab-ambulances" class="tab-content active">
+          <div class="section-header">
+            <h2 class="section-title">Daftar Ambulans</h2>
+            <span id="ambulance-count" class="count-badge">0 armada</span>
+          </div>
+          <div id="ambulance-list" class="card-list">
+            <!-- Ambulances rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- TAB CONTENT: NEAREST RECOMMENDATION -->
+        <div id="tab-nearest" class="tab-content">
+          <div class="section-header">
+            <h2 class="section-title">Cari Ambulans Terdekat</h2>
+          </div>
+          <div class="recommendation-panel">
+            <p class="panel-desc">Klik posisi lokasi pasien di peta atau masukkan koordinat manual untuk menghitung rekomendasi ambulans terdekat.</p>
+            
+            <form id="nearest-form" class="coord-form">
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label for="patient-lat">Latitude</label>
+                  <input type="number" id="patient-lat" step="any" placeholder="-10.177" required>
+                </div>
+                <div class="form-group flex-1">
+                  <label for="patient-lng">Longitude</label>
+                  <input type="number" id="patient-lng" step="any" placeholder="123.58" required>
+                </div>
+              </div>
+              
+              <div class="btn-group">
+                <button type="button" id="select-map-btn" class="btn btn-outline btn-full">
+                  <span>📍 Klik di Peta</span>
+                </button>
+                <button type="submit" id="find-nearest-btn" class="btn btn-primary btn-full">
+                  <span>Cari Terdekat</span>
+                </button>
+              </div>
+            </form>
+
+            <div id="nearest-results" class="nearest-results">
+              <!-- Top 3 nearest ambulances rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT: SOS ALERTS -->
+        <div id="tab-sos" class="tab-content">
+          <div class="section-header">
+            <h2 class="section-title">Sinyal Darurat SOS</h2>
+          </div>
+          <div id="sos-list" class="card-list">
+            <!-- SOS alerts rendered dynamically -->
+            <p class="empty-state">Belum ada sinyal darurat SOS aktif.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAP CONTAINER -->
+      <section class="map-section">
+        <div id="map"></div>
+        <div id="map-instructions" class="map-overlay-instructions hidden">
+          <span>📍 Klik lokasi pasien di peta untuk menentukan koordinat rekomendasi</span>
+          <button id="cancel-map-select" class="btn-close-instructions">✕ Batal</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- TRIP HISTORY MODAL -->
+  <div id="history-modal" class="modal-overlay hidden">
+    <div class="history-card">
+      <div class="modal-header">
+        <h3 id="history-modal-title">Riwayat Perjalanan</h3>
+        <button id="close-history-modal" class="btn-icon">✕</button>
+      </div>
+      <div id="history-modal-body" class="modal-body">
+        <!-- History list rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- App JS -->
+  <script src="app.js"></script>
+</body>
+</html>
