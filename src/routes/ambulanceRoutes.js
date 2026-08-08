@@ -4,11 +4,19 @@ const ambulanceController = require('../controllers/ambulanceController');
 const verifyAuthToken = require('../middlewares/authMiddleware');
 const { allowRoles } = require('../middlewares/roleMiddleware');
 
-// GET /api/ambulances (protected: operator, management)
+// GET /api/ambulance/me (protected: driver, operator, management)
+router.get(
+  '/ambulance/me',
+  verifyAuthToken,
+  allowRoles('driver', 'operator', 'management'),
+  ambulanceController.getMyAmbulance
+);
+
+// GET /api/ambulances (protected: operator, management, driver)
 router.get(
   '/ambulances',
   verifyAuthToken,
-  allowRoles('operator', 'management'),
+  allowRoles('operator', 'management', 'driver'),
   ambulanceController.listAmbulances
 );
 

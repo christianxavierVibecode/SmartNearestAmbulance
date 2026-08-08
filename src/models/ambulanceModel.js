@@ -13,12 +13,45 @@ async function getAll() {
       u.name AS driver_name, 
       a.status, 
       a.last_seen_at, 
-      a.created_at
+      a.created_at,
+      lh.latitude,
+      lh.longitude
     FROM ambulances a
     LEFT JOIN users u ON a.driver_id = u.id
+    LEFT JOIN (
+      SELECT lh1.ambulance_id, lh1.latitude, lh1.longitude
+      FROM location_history lh1
+      INNER JOIN (
+        SELECT ambulance_id, MAX(id) AS max_id
+        FROM location_history
+        GROUP BY ambulance_id
+      ) lh2 ON lh1.id = lh2.max_id
+    ) lh ON a.id = lh.ambulance_id
     ORDER BY a.id ASC
   `);
   return rows;
+}
+
+/**
+ * Find ambulance assigned to a driver by driver user ID
+ * @param {number} driverId 
+ * @returns {Promise<Object|null>}
+ */
+async function findByDriverId(driverId) {
+  const [rows] = await db.query(`
+    SELECT 
+      a.id, 
+      a.plate_number, 
+      a.driver_id, 
+      u.name AS driver_name, 
+      a.status, 
+      a.last_seen_at, 
+      a.created_at
+    FROM ambulances a
+    LEFT JOIN users u ON a.driver_id = u.id
+    WHERE a.driver_id = ?
+  `, [driverId]);
+  return rows.length > 0 ? rows[0] : null;
 }
 
 /**
@@ -105,6 +138,7 @@ async function getAvailableWithLastLocation() {
 module.exports = {
   getAll,
   findById,
+  findByDriverId,
   updateStatus,
   updateLastSeen,
   getAvailableWithLastLocation

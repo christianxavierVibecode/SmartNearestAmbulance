@@ -25,6 +25,30 @@ async function listAmbulances(req, res) {
 }
 
 /**
+ * Handle GET /api/ambulance/me (Fetch assigned ambulance for logged-in driver)
+ */
+async function getMyAmbulance(req, res) {
+  try {
+    const driverId = req.user.id;
+    const ambulance = await ambulanceModel.findByDriverId(driverId);
+    if (!ambulance) {
+      return res.status(404).json({
+        message: 'Tidak ada ambulans yang terhubung dengan akun driver ini'
+      });
+    }
+    return res.status(200).json({
+      status: 'success',
+      data: ambulance
+    });
+  } catch (error) {
+    console.error('Error in ambulanceController.getMyAmbulance:', error);
+    return res.status(500).json({
+      message: 'Terjadi kesalahan pada server'
+    });
+  }
+}
+
+/**
  * Handle GET /api/ambulance/nearest?lat=&lng=
  */
 async function findNearest(req, res) {
@@ -186,6 +210,7 @@ async function getAmbulanceHistory(req, res) {
 
 module.exports = {
   listAmbulances,
+  getMyAmbulance,
   findNearest,
   updateAmbulanceStatus,
   getAmbulanceHistory

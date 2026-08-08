@@ -33,6 +33,9 @@ function broadcast(eventName, data) {
   const payload = `event: ${eventName}\ndata: ${JSON.stringify(data)}\n\n`;
   clients.forEach(client => {
     client.write(payload);
+    if (typeof client.flush === 'function') {
+      client.flush();
+    }
   });
 }
 

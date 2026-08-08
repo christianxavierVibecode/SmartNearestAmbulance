@@ -106,25 +106,25 @@ logoutBtn.addEventListener('click', () => {
 // FETCH DRIVER'S AMBULANCE INFO
 async function loadAmbulanceInfo() {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/ambulances`, {
+    const res = await fetch(`${API_BASE_URL}/api/ambulance/me`, {
       headers: { 'Authorization': `Bearer ${state.token}` }
     });
     const result = await res.json();
 
     if (res.ok && result.data) {
-      // Find ambulance assigned to logged in driver or fallback to first
-      const amb = result.data.find(a => a.driver_id === state.user.id) || result.data[0];
-      if (amb) {
-        state.ambulance = amb;
-        state.currentStatus = amb.status;
-        ambulancePlateEl.textContent = `Plat: ${amb.plate_number}`;
-        updateStatusUI(amb.status);
-      }
+      state.ambulance = result.data;
+      state.currentStatus = result.data.status;
+      ambulancePlateEl.textContent = `Plat: ${result.data.plate_number}`;
+      updateStatusUI(result.data.status);
+    } else {
+      console.warn('No ambulance linked to this driver account:', result.message);
+      ambulancePlateEl.textContent = 'Tidak Ada Ambulans';
+      state.ambulance = null;
     }
   } catch (err) {
     console.error('Failed to load ambulance info:', err);
-    ambulancePlateEl.textContent = 'Plat: DH 1234 AA';
-    state.ambulance = { id: 1, plate_number: 'DH 1234 AA' };
+    ambulancePlateEl.textContent = 'Gagal Memuat Ambulans';
+    state.ambulance = null;
   }
 
   // Start 5-second automatic location tracking
@@ -172,8 +172,10 @@ function updateGPSCoords(cb) {
 }
 
 async function sendLocationUpdate() {
+  if (!state.ambulance) return;
+
   updateGPSCoords(async () => {
-    const ambId = state.ambulance ? state.ambulance.id : 1;
+    const ambId = state.ambulance.id;
     const { lat, lng } = state.currentCoords;
 
     liveCoordsEl.textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
@@ -207,8 +209,13 @@ async function sendLocationUpdate() {
 // STATUS BUTTONS HANDLER
 statusBtns.forEach(btn => {
   btn.addEventListener('click', async () => {
+    if (!state.ambulance) {
+      alert('Tidak ada ambulans yang terhubung dengan akun driver ini');
+      return;
+    }
+
     const newStatus = btn.getAttribute('data-status');
-    const ambId = state.ambulance ? state.ambulance.id : 1;
+    const ambId = state.ambulance.id;
 
     try {
       const res = await fetch(`${API_BASE_URL}/api/ambulance/${ambId}/status`, {
@@ -254,11 +261,16 @@ function updateStatusUI(status) {
 
 // SOS EMERGENCY HANDLER
 sosBtn.addEventListener('click', async () => {
+  if (!state.ambulance) {
+    alert('Tidak ada ambulans yang terhubung dengan akun driver ini');
+    return;
+  }
+
   const confirmSos = confirm('KIRIM SINYAL DARURAT (SOS)?\nSinyal ini akan langsung menyalakan sirine alert di dashboard operator.');
 
   if (!confirmSos) return;
 
-  const ambId = state.ambulance ? state.ambulance.id : 1;
+  const ambId = state.ambulance.id;
   const { lat, lng } = state.currentCoords;
 
   try {
