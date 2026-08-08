@@ -1,4 +1,5 @@
 const ambulanceModel = require('../models/ambulanceModel');
+const tripModel = require('../models/tripModel');
 const sseManager = require('../utils/sseManager');
 const { calculateDistance } = require('../utils/haversine');
 
@@ -116,7 +117,16 @@ async function updateAmbulanceStatus(req, res) {
       });
     }
 
+    const previousStatus = ambulance.status;
+
     await ambulanceModel.updateStatus(id, status);
+
+    // Automatic trip tracking based on status transitions
+    if (status === 'on_mission' && previousStatus !== 'on_mission') {
+      await tripModel.startTrip(id);
+    } else if (previousStatus === 'on_mission' && status !== 'on_mission') {
+      await tripModel.endTrip(id);
+    }
 
     const updatedAmbulance = await ambulanceModel.findById(id);
 
@@ -138,8 +148,45 @@ async function updateAmbulanceStatus(req, res) {
   }
 }
 
+/**
+ * Handle GET /api/ambulance/:id/history
+ */
+async function getAmbulanceHistory(req, res) {
+  try {
+    const { id } = req.params;
+    const ambulanceId = parseInt(id, 10);
+
+    if (isNaN(ambulanceId)) {
+      return res.status(400).json({
+        message: 'ID ambulans tidak valid'
+      });
+    }
+
+    const ambulance = await ambulanceModel.findById(ambulanceId);
+    if (!ambulance) {
+      return res.status(404).json({
+        message: 'Ambulans tidak ditemukan'
+      });
+    }
+
+    const trips = await tripModel.getHistoryByAmbulance(ambulanceId);
+
+    return res.status(200).json({
+      status: 'success',
+      count: trips.length,
+      data: trips
+    });
+  } catch (error) {
+    console.error('Error in ambulanceController.getAmbulanceHistory:', error);
+    return res.status(500).json({
+      message: 'Terjadi kesalahan pada server'
+    });
+  }
+}
+
 module.exports = {
   listAmbulances,
   findNearest,
-  updateAmbulanceStatus
+  updateAmbulanceStatus,
+  getAmbulanceHistory
 };

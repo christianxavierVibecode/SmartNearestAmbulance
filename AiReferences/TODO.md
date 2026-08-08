@@ -83,12 +83,12 @@
 
 ## Phase 7 — Riwayat Perjalanan (Trips)
 
-- [ ] Buat `src/models/tripModel.js` — fungsi `startTrip(ambulanceId)` dan `endTrip(ambulanceId)`
-- [ ] Integrasikan `startTrip` saat status ambulans berubah menjadi `on_mission` (di `ambulanceController.updateAmbulanceStatus`)
-- [ ] Integrasikan `endTrip` saat status berubah dari `on_mission` ke `available`
-- [ ] Tambahkan fungsi `getHistoryByAmbulance(id)` ke `tripModel.js`
-- [ ] Buat endpoint `GET /api/ambulance/:id/history` di `ambulanceRoutes.js`
-- [ ] Test manual: ubah status ambulans on_mission → available, verifikasi 1 baris trip tercatat
+- [x] Buat `src/models/tripModel.js` — fungsi `startTrip(ambulanceId)` dan `endTrip(ambulanceId)`
+- [x] Integrasikan `startTrip` saat status ambulans berubah menjadi `on_mission` (di `ambulanceController.updateAmbulanceStatus`)
+- [x] Integrasikan `endTrip` saat status berubah dari `on_mission` ke `available`
+- [x] Tambahkan fungsi `getHistoryByAmbulance(id)` ke `tripModel.js`
+- [x] Buat endpoint `GET /api/ambulance/:id/history` di `ambulanceRoutes.js`
+- [x] Test manual: ubah status ambulans on_mission → available, verifikasi 1 baris trip tercatat
 
 ## Phase 8 — Dashboard Web Operator
 

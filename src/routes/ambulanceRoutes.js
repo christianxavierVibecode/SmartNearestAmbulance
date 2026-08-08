@@ -28,4 +28,12 @@ router.put(
   ambulanceController.updateAmbulanceStatus
 );
 
+// GET /api/ambulance/:id/history (protected: operator, management, driver)
+router.get(
+  '/ambulance/:id/history',
+  verifyAuthToken,
+  allowRoles('operator', 'management', 'driver'),
+  ambulanceController.getAmbulanceHistory
+);
+
 module.exports = router;
