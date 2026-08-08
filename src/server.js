@@ -28,6 +28,14 @@ app.use('/api', ambulanceRoutes);
 app.use('/api', locationRoutes);
 app.use('/api', sosRoutes);
 
+// API Welcome Route
+app.get('/api', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'Smart Nearest Ambulance API System is running'
+  });
+});
+
 // Health Check Endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
