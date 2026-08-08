@@ -39,6 +39,10 @@ const mapInstructions = document.getElementById('map-instructions');
 const cancelMapSelectBtn = document.getElementById('cancel-map-select');
 const nearestResultsEl = document.getElementById('nearest-results');
 
+const gmapsUrlInput = document.getElementById('gmaps-url-input');
+const parseGmapsBtn = document.getElementById('parse-gmaps-btn');
+const gmapsError = document.getElementById('gmaps-error');
+
 const sosListEl = document.getElementById('sos-list');
 const sosBadgeCount = document.getElementById('sos-badge-count');
 
@@ -514,6 +518,64 @@ selectMapBtn.addEventListener('click', () => {
 cancelMapSelectBtn.addEventListener('click', () => {
   exitMapSelectingMode();
 });
+
+// GOOGLE MAPS SHORTLINK PARSER & AUTO SEARCH
+async function handleParseGmaps() {
+  const url = gmapsUrlInput.value.trim();
+  if (!url) {
+    showGmapsError('Masukkan URL Google Maps terlebih dahulu');
+    return;
+  }
+
+  gmapsError.classList.add('hidden');
+  parseGmapsBtn.disabled = true;
+  parseGmapsBtn.innerHTML = '<span>Mengonversi...</span>';
+
+  try {
+    const res = await fetch('/api/ambulance/parse-gmaps', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${state.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ url })
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw new Error(result.message || 'Gagal mengekstrak koordinat dari link');
+    }
+
+    const { lat, lng } = result.data;
+    setPatientLocation(lat, lng);
+    map.flyTo([lat, lng], 15, { animate: true, duration: 1 });
+    fetchNearestAmbulances(lat, lng);
+  } catch (err) {
+    showGmapsError(err.message);
+  } finally {
+    parseGmapsBtn.disabled = false;
+    parseGmapsBtn.innerHTML = '<span>Konversi & Cari</span>';
+  }
+}
+
+function showGmapsError(msg) {
+  gmapsError.textContent = msg;
+  gmapsError.classList.remove('hidden');
+}
+
+if (parseGmapsBtn) {
+  parseGmapsBtn.addEventListener('click', handleParseGmaps);
+}
+
+if (gmapsUrlInput) {
+  gmapsUrlInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleParseGmaps();
+    }
+  });
+}
 
 nearestForm.addEventListener('submit', (e) => {
   e.preventDefault();

@@ -28,6 +28,14 @@ router.get(
   ambulanceController.findNearest
 );
 
+// POST /api/ambulance/parse-gmaps (protected: operator, management, driver)
+router.post(
+  '/ambulance/parse-gmaps',
+  verifyAuthToken,
+  allowRoles('operator', 'management', 'driver'),
+  ambulanceController.parseGmapsUrl
+);
+
 // PUT /api/ambulance/:id/status (protected: driver, operator, management)
 router.put(
   '/ambulance/:id/status',

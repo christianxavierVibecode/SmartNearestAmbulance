@@ -100,8 +100,19 @@
             <h2 class="section-title">Cari Ambulans Terdekat</h2>
           </div>
           <div class="recommendation-panel">
-            <p class="panel-desc">Klik posisi lokasi pasien di peta atau masukkan koordinat manual untuk menghitung rekomendasi ambulans terdekat.</p>
+            <p class="panel-desc">Paste link Google Maps (maps.app.goo.gl) atau klik lokasi di peta untuk menghitung rekomendasi ambulans terdekat.</p>
             
+            <div class="gmaps-input-section" style="margin-bottom: 16px;">
+              <label for="gmaps-url-input" style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">📍 Link Google Maps / Alamat Rumah</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="gmaps-url-input" placeholder="https://maps.app.goo.gl/..." style="flex: 1; padding: 10px 14px; border: 1px solid var(--color-mist); border-radius: var(--radius-md); font-size: 13px;">
+                <button type="button" id="parse-gmaps-btn" class="btn btn-primary btn-sm" style="white-space: nowrap;">
+                  <span>Konversi & Cari</span>
+                </button>
+              </div>
+              <span id="gmaps-error" class="hidden" style="color: #dc2626; font-size: 12px; margin-top: 4px; display: block;"></span>
+            </div>
+
             <form id="nearest-form" class="coord-form">
               <div class="form-row">
                 <div class="form-group flex-1">

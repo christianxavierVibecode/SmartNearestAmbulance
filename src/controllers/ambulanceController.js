@@ -173,6 +173,106 @@ async function updateAmbulanceStatus(req, res) {
 }
 
 /**
+ * Helper to parse coordinates from Google Maps URLs or direct coordinate strings
+ */
+function extractCoordsFromText(text) {
+  if (!text) return null;
+
+  // Pattern 1: @lat,lng,zoom or @lat,lng
+  const atMatch = text.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if (atMatch) {
+    return { lat: parseFloat(atMatch[1]), lng: parseFloat(atMatch[2]) };
+  }
+
+  // Pattern 2: !3d-10.1772!4d123.5823
+  const d3d4Match = text.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
+  if (d3d4Match) {
+    return { lat: parseFloat(d3d4Match[1]), lng: parseFloat(d3d4Match[2]) };
+  }
+
+  // Pattern 3: ?q=lat,lng or ?q=lat+lng or ?ll=lat,lng or center=lat,lng
+  const qMatch = text.match(/(?:q|ll|center|location)=(-?\d+\.\d+)(?:%2C|%20|[,\s]+)(-?\d+\.\d+)/i);
+  if (qMatch) {
+    return { lat: parseFloat(qMatch[1]), lng: parseFloat(qMatch[2]) };
+  }
+
+  // Pattern 4: direct coordinates "-10.177, 123.58"
+  const directMatch = text.match(/(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/);
+  if (directMatch) {
+    return { lat: parseFloat(directMatch[1]), lng: parseFloat(directMatch[2]) };
+  }
+
+  return null;
+}
+
+/**
+ * Handle POST /api/ambulance/parse-gmaps
+ * Body: { url: "https://maps.app.goo.gl/..." }
+ */
+async function parseGmapsUrl(req, res) {
+  try {
+    const { url } = req.body;
+
+    if (!url || typeof url !== 'string') {
+      return res.status(400).json({
+        message: 'URL atau string lokasi Google Maps wajib diisi'
+      });
+    }
+
+    const trimmedInput = url.trim();
+
+    // 1. Try parsing directly from input string
+    let coords = extractCoordsFromText(trimmedInput);
+    if (coords) {
+      return res.status(200).json({
+        status: 'success',
+        data: coords
+      });
+    }
+
+    // 2. If it's a URL (http:// or https://), follow redirects to expand short link
+    if (trimmedInput.startsWith('http://') || trimmedInput.startsWith('https://')) {
+      try {
+        const response = await fetch(trimmedInput, {
+          method: 'GET',
+          redirect: 'follow',
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          }
+        });
+
+        const finalUrl = response.url;
+        coords = extractCoordsFromText(finalUrl);
+
+        if (!coords) {
+          const bodyText = await response.text();
+          coords = extractCoordsFromText(bodyText);
+        }
+
+        if (coords) {
+          return res.status(200).json({
+            status: 'success',
+            data: coords,
+            expanded_url: finalUrl
+          });
+        }
+      } catch (fetchErr) {
+        console.error('Error fetching Google Maps URL:', fetchErr);
+      }
+    }
+
+    return res.status(400).json({
+      message: 'Gagal mengekstrak koordinat dari link Google Maps yang diberikan. Pastikan link atau koordinat valid.'
+    });
+  } catch (error) {
+    console.error('Error in ambulanceController.parseGmapsUrl:', error);
+    return res.status(500).json({
+      message: 'Terjadi kesalahan server saat mengonversi link Google Maps'
+    });
+  }
+}
+
+/**
  * Handle GET /api/ambulance/:id/history
  */
 async function getAmbulanceHistory(req, res) {
@@ -213,5 +313,6 @@ module.exports = {
   getMyAmbulance,
   findNearest,
   updateAmbulanceStatus,
-  getAmbulanceHistory
+  getAmbulanceHistory,
+  parseGmapsUrl
 };
