@@ -413,6 +413,12 @@ body {
   box-shadow: var(--shadow-md);
 }
 
+.card.active-card {
+  border-color: var(--color-forest-ink);
+  background-color: rgba(0, 153, 89, 0.05);
+  box-shadow: 0 0 0 2px rgba(0, 153, 89, 0.25), var(--shadow-md);
+}
+
 .card-header {
   display: flex;
   align-items: center;

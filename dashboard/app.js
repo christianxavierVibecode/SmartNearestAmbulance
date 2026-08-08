@@ -202,6 +202,8 @@ function renderAmbulanceList() {
     const card = document.createElement('div');
     card.className = 'card';
     card.id = `amb-card-${amb.id}`;
+    card.style.cursor = 'pointer';
+    card.title = 'Klik untuk mengarahkan peta ke koordinat ambulans ini';
 
     const lastSeenText = amb.last_seen_at ? getRelativeTime(amb.last_seen_at) : 'Belum ada data';
 
@@ -219,24 +221,94 @@ function renderAmbulanceList() {
       </div>
     `;
 
+    // Click sidebar card to automatically fly map to ambulance location
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('button')) return; // Don't trigger if history button clicked
+      focusAmbulanceOnMap(amb.id);
+    });
+
     ambulanceListEl.appendChild(card);
   });
 }
 
-function renderAmbulanceMarkers() {
-  state.ambulances.forEach(amb => {
-    const lat = amb.last_seen_at ? amb.latitude : null;
-    const lng = amb.last_seen_at ? amb.longitude : null;
+/**
+ * Focus map camera on specific ambulance and open marker popup
+ */
+function focusAmbulanceOnMap(ambId) {
+  const marker = markersMap[ambId];
+  if (marker) {
+    const latLng = marker.getLatLng();
+    map.flyTo(latLng, 16, { animate: true, duration: 1 });
+    marker.openPopup();
+    highlightAmbulanceCard(ambId);
+  }
+}
 
-    // Default position fallback if not reported yet
-    const markerLat = lat || -10.177 + (amb.id * 0.005);
-    const markerLng = lng || 123.58 + (amb.id * 0.005);
+/**
+ * Highlight active ambulance card in sidebar
+ */
+function highlightAmbulanceCard(ambId) {
+  document.querySelectorAll('#ambulance-list .card').forEach(c => c.classList.remove('active-card'));
+  const selectedCard = document.getElementById(`amb-card-${ambId}`);
+  if (selectedCard) {
+    selectedCard.classList.add('active-card');
+    selectedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+/**
+ * Calculate slightly offset coordinates for ambulances that share identical or nearly identical positions
+ * so all markers remain clearly visible without overlapping directly on top of each other.
+ */
+function getAdjustedCoordinates(ambulances) {
+  const adjustedCoords = {};
+  const coordGroups = {};
+
+  // Group ambulances by rounded lat,lng key (up to 5 decimal places)
+  ambulances.forEach((amb, idx) => {
+    const rawLat = (amb.last_seen_at && amb.latitude !== null) ? parseFloat(amb.latitude) : (-10.177 + (idx * 0.005));
+    const rawLng = (amb.last_seen_at && amb.longitude !== null) ? parseFloat(amb.longitude) : (123.58 + (idx * 0.005));
+    const key = `${rawLat.toFixed(5)},${rawLng.toFixed(5)}`;
+
+    if (!coordGroups[key]) {
+      coordGroups[key] = [];
+    }
+    coordGroups[key].push({ id: amb.id, lat: rawLat, lng: rawLng });
+  });
+
+  // Calculate circular offset if group count > 1
+  Object.keys(coordGroups).forEach(key => {
+    const group = coordGroups[key];
+    const count = group.length;
+
+    if (count === 1) {
+      adjustedCoords[group[0].id] = { lat: group[0].lat, lng: group[0].lng };
+    } else {
+      // Offset radius ~0.00035 degrees (~35-40 meters)
+      const radius = 0.00035;
+      group.forEach((item, index) => {
+        const angle = (2 * Math.PI * index) / count;
+        const offsetLat = item.lat + radius * Math.cos(angle);
+        const offsetLng = item.lng + radius * Math.sin(angle);
+        adjustedCoords[item.id] = { lat: offsetLat, lng: offsetLng };
+      });
+    }
+  });
+
+  return adjustedCoords;
+}
+
+function renderAmbulanceMarkers() {
+  const adjustedCoords = getAdjustedCoordinates(state.ambulances);
+
+  state.ambulances.forEach(amb => {
+    const coords = adjustedCoords[amb.id] || { lat: -10.177, lng: 123.58 };
 
     if (markersMap[amb.id]) {
-      markersMap[amb.id].setLatLng([markerLat, markerLng]);
+      markersMap[amb.id].setLatLng([coords.lat, coords.lng]);
       markersMap[amb.id].setIcon(createAmbulanceIcon(amb.status));
     } else {
-      const marker = L.marker([markerLat, markerLng], {
+      const marker = L.marker([coords.lat, coords.lng], {
         icon: createAmbulanceIcon(amb.status)
       }).addTo(map);
 
@@ -247,6 +319,11 @@ function renderAmbulanceMarkers() {
           Status: <strong>${getStatusLabel(amb.status)}</strong>
         </div>
       `);
+
+      // Highlight sidebar card when marker is clicked directly on map
+      marker.on('click', () => {
+        highlightAmbulanceCard(amb.id);
+      });
 
       markersMap[amb.id] = marker;
     }
@@ -276,12 +353,7 @@ function initSse() {
     const data = JSON.parse(e.data);
     const { ambulance_id, lat, lng, timestamp } = data;
 
-    // Update marker on map
-    if (markersMap[ambulance_id]) {
-      markersMap[ambulance_id].setLatLng([lat, lng]);
-    }
-
-    // Update state & UI
+    // Update state
     const amb = state.ambulances.find(a => a.id === ambulance_id);
     if (amb) {
       amb.last_seen_at = timestamp;
@@ -292,6 +364,9 @@ function initSse() {
         lastSeenEl.textContent = getRelativeTime(timestamp);
       }
     }
+
+    // Re-render markers with recalculated de-overlapping positions
+    renderAmbulanceMarkers();
   });
 
   // Handle status_update
