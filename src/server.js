@@ -5,6 +5,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
 const ambulanceRoutes = require('./routes/ambulanceRoutes');
 const locationRoutes = require('./routes/locationRoutes');
+const sosRoutes = require('./routes/sosRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api', ambulanceRoutes);
 app.use('/api', locationRoutes);
+app.use('/api', sosRoutes);
 
 // Health Check Endpoint
 app.get('/health', (req, res) => {

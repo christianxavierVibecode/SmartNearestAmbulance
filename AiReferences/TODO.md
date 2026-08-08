@@ -75,11 +75,11 @@
 
 ## Phase 6 — SOS Darurat
 
-- [ ] Buat `src/models/sosModel.js` — fungsi `createAlert(ambulanceId, lat, lng)` dan `resolveAlert(id)`
-- [ ] Buat `src/controllers/sosController.js` — fungsi `triggerSos` (insert DB + broadcast event `sos_alert`)
-- [ ] Tambahkan fungsi `resolveSos` ke `sosController.js`
-- [ ] Buat `src/routes/sosRoutes.js` — daftarkan `POST /api/sos` (protected: driver) dan `PUT /api/sos/:id/resolve` (protected: operator)
-- [ ] Test manual: trigger SOS, verifikasi event realtime diterima client SSE
+- [x] Buat `src/models/sosModel.js` — fungsi `createAlert(ambulanceId, lat, lng)` dan `resolveAlert(id)`
+- [x] Buat `src/controllers/sosController.js` — fungsi `triggerSos` (insert DB + broadcast event `sos_alert`)
+- [x] Tambahkan fungsi `resolveSos` ke `sosController.js`
+- [x] Buat `src/routes/sosRoutes.js` — daftarkan `POST /api/sos` (protected: driver) dan `PUT /api/sos/:id/resolve` (protected: operator)
+- [x] Test manual: trigger SOS, verifikasi event realtime diterima client SSE
 
 ## Phase 7 — Riwayat Perjalanan (Trips)
 
