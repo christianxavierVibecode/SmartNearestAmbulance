@@ -22,3 +22,9 @@ yarn-error.log*
 # OS files
 .DS_Store
 Thumbs.db
+
+# ignore txt files
+*.txt
+
+# Buka blokir agar file APK hasil rename bisa masuk ke Git
+!driver-app/android/app/build/outputs/apk/debug/*.apk
