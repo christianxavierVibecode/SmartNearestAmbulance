@@ -54,8 +54,9 @@ Berikut adalah gambaran antarmuka dan alur kerja sistem Smart Nearest Ambulance 
 Pengguna masuk ke dalam sistem sesuai dengan *role* akun yang terdaftar untuk menjaga keamanan dan hak akses data.
 
 <p align="center">
-  <img src="AiReferences/readmeImg/Halaman%20Login%20Operator.jpeg" width="48%" alt="Halaman Login Operator">&nbsp;
-  <img src="AiReferences/readmeImg/Halaman%20Login%20Driver.jpeg" width="48%" alt="Halaman Login Driver">
+  <img src="AiReferences/readmeImg/Halaman%20Login%20Operator.jpeg" width="55%" alt="Halaman Login Operator" style="vertical-align: middle; border-radius: 8px;">
+  &nbsp;&nbsp;
+  <img src="AiReferences/readmeImg/Halaman%20Login%20Driver.jpeg" width="240" alt="Halaman Login Driver" style="vertical-align: middle; border-radius: 8px;">
 </p>
 
 ---
@@ -64,8 +65,9 @@ Pengguna masuk ke dalam sistem sesuai dengan *role* akun yang terdaftar untuk me
 Sopir memberikan izin akses lokasi latar belakang (*Background Geolocation*) agar lokasi GPS dapat terus terkirim setiap 5 detik. Sopir juga dapat mengubah status operasional armada (`Available`, `On Mission`, `Maintenance`, `Offline`).
 
 <p align="center">
-  <img src="AiReferences/readmeImg/Persetujuan%20Akses%20Lokasi%20pada%20aplikasi%20driver.jpeg" width="48%" alt="Persetujuan Akses Lokasi">&nbsp;
-  <img src="AiReferences/readmeImg/Status%20Ambulance%20pada%20driver.jpeg" width="48%" alt="Status Ambulance Driver">
+  <img src="AiReferences/readmeImg/Persetujuan%20Akses%20Lokasi%20pada%20aplikasi%20driver.jpeg" width="240" alt="Persetujuan Akses Lokasi" style="border-radius: 8px;">
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="AiReferences/readmeImg/Status%20Ambulance%20pada%20driver.jpeg" width="240" alt="Status Ambulance Driver" style="border-radius: 8px;">
 </p>
 
 ---
@@ -74,8 +76,9 @@ Sopir memberikan izin akses lokasi latar belakang (*Background Geolocation*) aga
 Operator memantau posisi seluruh marker ambulans pada peta Leaflet.js / OpenStreetMap. Saat menerima panggilan darurat, operator dapat memasukkan titik koordinat pasien atau mengonversi link Google Maps untuk memperoleh **Rekomendasi 3 Ambulans Terdekat**.
 
 <p align="center">
-  <img src="AiReferences/readmeImg/Status%20Ambulance%20pada%20operator.jpeg" width="48%" alt="Status Ambulance Operator">&nbsp;
-  <img src="AiReferences/readmeImg/Rekomendasi%20ambulance%20berdasarkan%20lokasi%20pasien.jpeg" width="48%" alt="Rekomendasi Ambulans Terdekat">
+  <img src="AiReferences/readmeImg/Status%20Ambulance%20pada%20operator.jpeg" width="48%" alt="Status Ambulance Operator" style="border-radius: 8px;">
+  &nbsp;
+  <img src="AiReferences/readmeImg/Rekomendasi%20ambulance%20berdasarkan%20lokasi%20pasien.jpeg" width="48%" alt="Rekomendasi Ambulans Terdekat" style="border-radius: 8px;">
 </p>
 
 ---
@@ -84,8 +87,9 @@ Operator memantau posisi seluruh marker ambulans pada peta Leaflet.js / OpenStre
 Jika sopir mengalami kendala di lapangan atau membutuhkan penanganan darurat segera, sopir dapat memicu **Tombol SOS**. Sinyal ini ditransmisikan secara *real-time* via SSE ke dashboard operator dengan efek peringatan visual dan sorotan marker khusus.
 
 <p align="center">
-  <img src="AiReferences/readmeImg/Sinya%20SOS%20dikirim%20dari%20driver.jpeg" width="48%" alt="Sinyal SOS Kirim Driver">&nbsp;
-  <img src="AiReferences/readmeImg/Sinyal%20SOS%20di%20terima%20oleh%20operator.jpeg" width="48%" alt="Sinyal SOS Diterima Operator">
+  <img src="AiReferences/readmeImg/Sinya%20SOS%20dikirim%20dari%20driver.jpeg" width="240" alt="Sinyal SOS Kirim Driver" style="vertical-align: middle; border-radius: 8px;">
+  &nbsp;&nbsp;
+  <img src="AiReferences/readmeImg/Sinyal%20SOS%20di%20terima%20oleh%20operator.jpeg" width="55%" alt="Sinyal SOS Diterima Operator" style="vertical-align: middle; border-radius: 8px;">
 </p>
 
 ---
