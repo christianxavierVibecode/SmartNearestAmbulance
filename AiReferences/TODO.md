@@ -150,11 +150,11 @@
 
 ## Phase 10 — Non-Functional & Polish
 
-- [ ] Tambahkan validasi input (mis. `express-validator`) di seluruh endpoint POST/PUT
-- [ ] Buat centralized error handler middleware di `src/middlewares/errorHandler.js`
-- [ ] Tambahkan request logging sederhana (`morgan`)
-- [ ] Konfigurasi CORS agar hanya origin dashboard yang diizinkan
-- [ ] Pisahkan config `.env` untuk development vs production
-- [ ] Tulis `README.md` — instruksi setup backend, database, dashboard, dan build aplikasi driver
-- [ ] Siapkan data demo (skrip seed tambahan) untuk simulasi presentasi hackathon
-- [ ] Lakukan end-to-end test: app sopir kirim lokasi → tersimpan di DB → muncul realtime di dashboard
+- [x] Tambahkan validasi input (mis. `express-validator`) di seluruh endpoint POST/PUT
+- [x] Buat centralized error handler middleware di `src/middlewares/errorHandler.js`
+- [x] Tambahkan request logging sederhana (`morgan`)
+- [x] Konfigurasi CORS agar hanya origin dashboard yang diizinkan
+- [x] Pisahkan config `.env` untuk development vs production
+- [x] Tulis `README.md` — instruksi setup backend, database, dashboard, dan build aplikasi driver
+- [x] Siapkan data demo (skrip seed tambahan) untuk simulasi presentasi hackathon
+- [x] Lakukan end-to-end test: app sopir kirim lokasi → tersimpan di DB → muncul realtime di dashboard
