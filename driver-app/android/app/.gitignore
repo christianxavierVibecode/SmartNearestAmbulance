@@ -1,2 +1,5 @@
 /build/*
 !/build/.npmkeep
+
+# Buka blokir khusus untuk file APK hasil rename di dalam folder app/build
+!/build/outputs/apk/debug/*.apk
