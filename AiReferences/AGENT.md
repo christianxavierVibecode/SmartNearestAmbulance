@@ -41,7 +41,7 @@ Dokumen referensi lengkap (baca jika butuh konteks bisnis/fungsional lebih dalam
 
 ## 2. Tech Stack (Fixed — Jangan Diubah Tanpa Persetujuan User)
 
-| Komponen | Teknologi |
+| Komponen | Teknologi | 
 |---|---|
 | Backend | Node.js + Express |
 | Database | MySQL |
