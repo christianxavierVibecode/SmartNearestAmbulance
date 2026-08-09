@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Nearest Ambulance — System Notice</title>
+  <link rel="icon" type="image/png" href="icon.png">
+
+  <!-- Google Fonts: Inter & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-forest-ink: #009959;
+      --color-vine: #00b96c;
+      --color-graphite: #141414;
+      --color-carbon: #313232;
+      --color-slate: #545454;
+      --color-mist: #d6d6d6;
+      --color-cloud: #e6e6e6;
+      --color-veil: #f0f0f0;
+      --color-paper: #fafafa;
+      --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-poppins: 'Poppins', system-ui, -apple-system, sans-serif;
+      --radius-lg: 10px;
+      --shadow-sm: rgba(0, 0, 0, 0.04) 0px 4px 8px 0px;
+      --shadow-md: rgba(0, 0, 0, 0.08) 0px 4px 16px 0px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-inter);
+      background-color: var(--color-paper);
+      color: var(--color-carbon);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      line-height: 1.5;
+    }
+
+    .error-container {
+      background: #ffffff;
+      border: 1px solid var(--color-cloud);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      max-width: 520px;
+      width: 100%;
+      padding: 40px 32px;
+      text-align: center;
+    }
+
+    .brand-logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--color-veil);
+      border: 1px solid var(--color-mist);
+      padding: 8px 16px;
+      border-radius: 9999px;
+      margin-bottom: 24px;
+    }
+
+    .brand-logo-badge img {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+
+    .brand-logo-badge span {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-graphite);
+      letter-spacing: -0.02em;
+    }
+
+    .error-code-badge {
+      font-family: var(--font-poppins);
+      font-size: 64px;
+      font-weight: 600;
+      line-height: 1;
+      color: var(--color-graphite);
+      margin-bottom: 12px;
+      letter-spacing: -1px;
+    }
+
+    .error-title {
+      font-family: var(--font-poppins);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--color-graphite);
+      margin-bottom: 12px;
+    }
+
+    .error-desc {
+      font-size: 14px;
+      color: var(--color-slate);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: var(--radius-lg);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background-color: var(--color-forest-ink);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #00854d;
+    }
+
+    .btn-outline {
+      background-color: #ffffff;
+      border-color: var(--color-mist);
+      color: var(--color-graphite);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--color-veil);
+    }
+
+    .footer-copy {
+      margin-top: 32px;
+      font-size: 12px;
+      color: var(--color-slate);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="error-container">
+    <div class="brand-logo-badge">
+      <img src="icon.png" alt="SNA Logo">
+      <span>Smart Nearest Ambulance</span>
+    </div>
+
+    <div id="error-code" class="error-code-badge">404</div>
+    <h1 id="error-title" class="error-title">Halaman Tidak Ditemukan</h1>
+    <p id="error-desc" class="error-desc">Maaf, halaman atau resource yang Anda tuju tidak ditemukan atau telah dipindahkan.</p>
+
+    <div class="action-buttons">
+      <a href="/" class="btn btn-primary">
+        <span>🏠 Kembali ke Dashboard</span>
+      </a>
+      <button onclick="window.location.reload()" class="btn btn-outline">
+        <span>🔄 Muat Ulang</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="footer-copy">
+    &copy; 2026 Smart Nearest Ambulance — Emergency Dispatch System
+  </div>
+
+  <script>
+    const errorDetails = {
+      '400': {
+        title: 'Bad Request (Permintaan Tidak Valid)',
+        desc: 'Format data atau parameter yang Anda kirimkan tidak sesuai dengan spesifikasi server.'
+      },
+      '401': {
+        title: 'Unauthorized (Akses Ditolak)',
+        desc: 'Anda belum terautentikasi atau sesi login telah berakhir. Silakan masuk kembali.'
+      },
+      '403': {
+        title: 'Forbidden (Akses Dibatasi)',
+        desc: 'Anda tidak memiliki hak akses (role) yang cukup untuk melihat atau mengelola resource ini.'
+      },
+      '404': {
+        title: 'Not Found (Tidak Ditemukan)',
+        desc: 'Halaman atau resource API yang Anda cari tidak ditemukan atau lokasi telah berubah.'
+      },
+      '429': {
+        title: 'Too Many Requests (Batas Permintaan Terlampaui)',
+        desc: 'Terlalu banyak permintaan dikirim dalam waktu singkat. Silakan tunggu beberapa detik sebelum mencoba lagi.'
+      },
+      '500': {
+        title: 'Internal Server Error (Kesalahan Server)',
+        desc: 'Terjadi kendala teknis internal pada sistem backend server. Tim kami sedang menanganinya.'
+      },
+      '503': {
+        title: 'Service Unavailable (Layanan Tidak Tersedia)',
+        desc: 'Sistem server sedang dalam pemeliharaan berkala atau mengalami kelebihan beban sementara.'
+      }
+    };
+
+    // Parse URL code query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code') || '404';
+
+    const info = errorDetails[code] || errorDetails['404'];
+
+    document.getElementById('error-code').textContent = code;
+    document.getElementById('error-title').textContent = info.title;
+    document.getElementById('error-desc').textContent = info.desc;
+    document.title = `${code} — ${info.title} | Smart Nearest Ambulance`;
+  </script>
+</body>
+</html>

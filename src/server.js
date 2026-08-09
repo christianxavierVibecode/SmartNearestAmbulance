@@ -22,6 +22,18 @@ app.use(express.static(path.join(__dirname, '../dashboard')));
 // Serve Driver Mobile Web App Static Files
 app.use('/driver', express.static(path.join(__dirname, '../driver-app/www')));
 
+// Custom HTTP Error Code Page Routes
+const errorCodes = [400, 401, 403, 404, 429, 500, 503];
+errorCodes.forEach(code => {
+  app.get(`/${code}`, (req, res) => {
+    res.status(code).sendFile(path.join(__dirname, '../dashboard/error.html'));
+  });
+});
+
+app.get('/error', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dashboard/error.html'));
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api', ambulanceRoutes);
@@ -40,6 +52,21 @@ app.get('/api', (req, res) => {
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
+
+// 404 Unmatched Route Handler
+app.use((req, res, next) => {
+  if (req.accepts('html') && !req.path.startsWith('/api')) {
+    return res.status(404).sendFile(path.join(__dirname, '../dashboard/error.html'));
+  }
+  res.status(404).json({
+    status: 'fail',
+    code: 404,
+    message: `Route ${req.originalUrl} not found`
+  });
+});
+
+// Centralized Error Handler (Must be registered after all routes)
+app.use(errorHandler);
 
 // Start Server
 if (require.main === module) {
