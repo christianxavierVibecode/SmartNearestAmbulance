@@ -33,34 +33,32 @@ if (fs.existsSync(oldApkPath)) {
     console.log(`ℹ️ File ${appName}.apk sudah ada, melanjutkan proses Git.`);
 }
 
-// 5. Otomatisasi Git Push dan Tag dengan Penanganan Error yang Lebih Baik
+// 5. Otomatisasi Git Push dan Tag
 const version = `v${Date.now()}`; 
 try {
     console.log('🚀 Memaksa Git untuk mendeteksi file APK baru...');
-    // MENAMBAHKAN PARAMETER -f UNTUK MEMAKSA GIT MEMBAWA FILE APK TANPA TERBLOKIR GITIGNORE
     const relativeApkPath = path.relative(__dirname, newApkPath).replace(/\\/g, '/');
-    execSync(`git add -f "${relativeApkPath}"`);
     
-    // Tambahkan file sisa lainnya jika ada perubahan kode web
+    // Paksa git menambahkan file APK
+    execSync(`git add -f "${relativeApkPath}"`);
     execSync('git add .'); 
 
     console.log('📝 Melakukan Git Commit...');
-    // Cek apakah ada perubahan yang siap dikomit agar tidak memicu error kosong
     const status = execSync('git status --porcelain').toString().trim();
     if (status) {
         execSync(`git commit -m "Build: Release ${appName} (${version})"`);
     } else {
-        console.log('ℹ️ Tidak ada perubahan kode baru untuk dikomit, membuat tag langsung.');
+        console.log('ℹ️ Tidak ada perubahan file baru untuk dikomit.');
     }
     
     console.log(`🏷️  Membuat tag rilis: ${version}`);
     execSync(`git tag ${version}`);
     
-    console.log('📤 Mengirim kode dan tag ke GitHub...');
+    console.log('📤 Mengirim kode (main) dan tag rilis ke GitHub...');
     execSync('git push origin main'); 
     execSync(`git push origin ${version}`);
     
-    console.log('🎉 Selesai! GitHub Actions sekarang sedang memproses rilis Anda di cloud.');
+    console.log(`🎉 Selesai! Tag ${version} berhasil di-push. GitHub Actions sedang membuat Release dan mengunggah ${appName}.apk.`);
 } catch (error) {
     console.error('❌ Terjadi kesalahan saat menjalankan perintah Git:', error.message);
     if (error.stdout) console.error('Detail stdout:', error.stdout.toString());
