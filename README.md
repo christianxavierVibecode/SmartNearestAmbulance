@@ -32,7 +32,7 @@ Sistem Real-Time Monitoring & Rekomendasi Ambulans Terdekat berbasis GPS untuk m
 
 ```text
 SmartNearestAmbulance/
-├── AiReferences/         # Dokumentasi PRD, FRD, BRD, DESIGN, AGENT, TODO & icon.png
+├── AiReferences/         # Dokumentasi PRD, FRD, BRD, DESIGN, AGENT, TODO & iconApp.png
 ├── dashboard/            # Operator Web Dashboard & Halaman error (error.html)
 ├── database/             # Schema SQL & Seed data (seed.sql, demo_seed.sql)
 ├── driver-app/           # Capacitor Mobile App untuk Sopir Ambulans

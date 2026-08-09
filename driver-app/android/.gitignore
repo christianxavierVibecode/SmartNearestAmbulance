@@ -23,6 +23,9 @@ out/
 .gradle/
 build/
 
+# allow apk files only for release
+!android/app/build/outputs/apk/debug/*.apk
+
 # Local configuration file (sdk path, etc)
 local.properties
 

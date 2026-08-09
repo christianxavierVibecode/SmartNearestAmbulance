@@ -1,0 +1,20 @@
+name: Auto Release APK
+
+on:
+  push:
+    tags:
+      - 'v*' # Alur kerja ini hanya berjalan jika Anda push tag seperti v1.0.0, v1.1.0, dll.
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Create Release and Upload APK
+        uses: softprops/action-gh-release@v2
+        with:
+          files: driver-app/android/app/build/outputs/apk/debug/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
